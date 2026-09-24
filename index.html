@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nise Talks - Comunicação Alternativa (CAA)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            blue: '#e0f2fe',
+                            blueDark: '#0284c7',
+                            green: '#dcfce7',
+                            greenDark: '#15803d',
+                            purple: '#f3e8ff',
+                            purpleDark: '#7e22ce',
+                            rose: '#ffe4e6',
+                            roseDark: '#be123c',
+                            amber: '#fef3c7',
+                            amberDark: '#b45309'
+                        }
+                    },
+                    boxShadow: {
+                        'card': '0 4px 14px 0 rgba(0, 0, 0, 0.05)',
+                        'card-hover': '0 8px 25px 0 rgba(0, 0, 0, 0.1)',
+                        'speaking': '0 0 0 4px #0284c7, 0 8px 25px 0 rgba(2, 132, 199, 0.4)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        /* Custom scrollbars */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Keyframe animations */
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .animate-speaking {
+            animation: pulse-subtle 0.6s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-sky-50/60 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-full flex flex-col transition-colors duration-200 selection:bg-sky-200">
+
+    <!-- TOP HEADER -->
+    <header class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-sky-100 dark:border-slate-700 sticky top-0 z-40 shadow-sm transition-colors">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-2">
+            
+            <!-- Logo & Brand -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-sky-400 via-indigo-400 to-purple-400 flex items-center justify-center text-white shadow-md shadow-sky-300/30 dark:shadow-none">
+                    <i class="fa-solid fa-comment-dots text-xl sm:text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                        Nise Talks
+                        <span class="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 uppercase tracking-wide">CAA</span>
+                    </h1>
+                    <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Facilitador de Comunicação Acessível</p>
+                </div>
+            </div>
+
+            <!-- Top Actions -->
+            <div class="flex items-center space-x-1.5 sm:space-x-2">
+                <!-- Add New Custom Card Button -->
+                <button onclick="openCustomCardModal()" class="px-2.5 sm:px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold text-xs sm:text-sm flex items-center space-x-1.5 shadow-sm transition">
+                    <i class="fa-solid fa-plus text-sm"></i>
+                    <span class="hidden sm:inline">Criar Botão</span>
+                </button>
+
+                <!-- Voice Settings Modal Button -->
+                <button onclick="openVoiceSettingsModal()" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 active:scale-95 font-bold text-xs sm:text-sm flex items-center space-x-1.5 transition" title="Configurações de Voz">
+                    <i class="fa-solid fa-sliders text-base"></i>
+                    <span class="hidden md:inline">Voz & Som</span>
+                </button>
+
+                <!-- Theme Toggle Button -->
+                <button onclick="toggleDarkMode()" id="theme-toggle-btn" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-amber-500 dark:text-amber-300 transition" title="Alternar Modo Noturno">
+                    <i class="fa-solid fa-moon text-lg hidden dark:block"></i>
+                    <i class="fa-solid fa-sun text-lg block dark:hidden"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+
+        <!-- SENTENCE STRIP (Barra de Frases) -->
+        <section class="bg-white dark:bg-slate-800 rounded-3xl p-3 sm:p-5 border-2 border-sky-200 dark:border-slate-700 shadow-md transition-all">
+            
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
+                    <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                        Sua Frase:
+                    </h2>
+                </div>
+
+                <!-- Instant speak toggle -->
+                <label class="flex items-center space-x-2 cursor-pointer text-xs font-semibold text-slate-600 dark:text-slate-300">
+                    <span>Falar ao Clicar</span>
+                    <input type="checkbox" id="toggle-instant-speak" checked class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500 bg-slate-100 border-slate-300 dark:bg-slate-700 dark:border-slate-600">
+                </label>
+            </div>
+
+            <!-- Sentence Display Strip -->
+            <div id="sentence-strip" class="min-h-[72px] sm:min-h-[88px] bg-slate-50 dark:bg-slate-900/80 rounded-2xl p-2 sm:p-3 border border-slate-200 dark:border-slate-700 flex items-center space-x-2 overflow-x-auto custom-scrollbar">
+                <div id="empty-sentence-msg" class="text-slate-400 dark:text-slate-500 text-xs sm:text-sm italic font-medium px-2 flex items-center gap-2">
+                    <i class="fa-regular fa-hand-pointer text-base"></i>
+                    <span>Clique nos botões abaixo para montar sua mensagem aqui...</span>
+                </div>
+                <!-- Selected cards will be rendered dynamically inside here -->
+            </div>
+
+            <!-- Sentence Control Buttons -->
+            <div class="grid grid-cols-3 gap-2 sm:gap-3 mt-3">
+                <!-- Speak Full Sentence -->
+                <button onclick="speakFullSentence()" class="col-span-1 sm:col-span-1 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-extrabold py-3 px-2 sm:px-4 rounded-2xl shadow-md flex items-center justify-center space-x-1.5 sm:space-x-2 text-xs sm:text-base transition">
+                    <i class="fa-solid fa-volume-high text-base sm:text-lg"></i>
+                    <span class="truncate">Falar Frase</span>
+                </button>
+
+                <!-- Remove Last Card -->
+                <button onclick="removeLastCardFromSentence()" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-extrabold py-3 px-2 sm:px-4 rounded-2xl shadow-md flex items-center justify-center space-x-1.5 sm:space-x-2 text-xs sm:text-base transition">
+                    <i class="fa-solid fa-delete-left text-base sm:text-lg"></i>
+                    <span class="truncate">Apagar Único</span>
+                </button>
+
+                <!-- Clear Sentence -->
+                <button onclick="clearSentence()" class="bg-rose-500 hover:bg-rose-600 active:scale-95 text-white font-extrabold py-3 px-2 sm:px-4 rounded-2xl shadow-md flex items-center justify-center space-x-1.5 sm:space-x-2 text-xs sm:text-base transition">
+                    <i class="fa-solid fa-trash-can text-base sm:text-lg"></i>
+                    <span class="truncate">Limpar Tudo</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- CATEGORY TABS & SEARCH -->
+        <section class="space-y-4">
+            
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <!-- Category Buttons Navigation -->
+                <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar pb-1 sm:pb-0">
+                    <button onclick="switchCategory('daily')" id="tab-daily" class="category-tab px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm flex items-center space-x-2 whitespace-nowrap transition bg-sky-500 text-white shadow-md">
+                        <i class="fa-solid fa-house text-sm sm:text-base"></i>
+                        <span>Dia a Dia</span>
+                    </button>
+
+                    <button onclick="switchCategory('feelings')" id="tab-feelings" class="category-tab px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm flex items-center space-x-2 whitespace-nowrap transition text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-heart text-sm sm:text-base text-rose-500"></i>
+                        <span>Sentimentos</span>
+                    </button>
+
+                    <button onclick="switchCategory('hospital')" id="tab-hospital" class="category-tab px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm flex items-center space-x-2 whitespace-nowrap transition text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-briefcase-medical text-sm sm:text-base text-emerald-500"></i>
+                        <span>Hospital / Saúde</span>
+                    </button>
+
+                    <button onclick="switchCategory('custom')" id="tab-custom" class="category-tab px-4 py-2.5 rounded-2xl font-bold text-xs sm:text-sm flex items-center space-x-2 whitespace-nowrap transition text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800">
+                        <i class="fa-solid fa-star text-sm sm:text-base text-amber-500"></i>
+                        <span>Meus Botões</span>
+                    </button>
+                </div>
+
+                <!-- Quick Filter / Search Box -->
+                <div class="relative min-w-[200px]">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </div>
+                    <input type="text" id="search-input" oninput="filterCards()" placeholder="Buscar botão..." class="w-full pl-9 pr-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-medium text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm transition">
+                </div>
+            </div>
+
+            <!-- CARD GRID CONTAINER -->
+            <div id="cards-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+                <!-- Communication Cards will be rendered here dynamically -->
+            </div>
+
+            <!-- Empty Search Results Message -->
+            <div id="no-cards-msg" class="hidden text-center py-12 space-y-3 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-ghost text-4xl text-slate-300 dark:text-slate-600"></i>
+                <p class="text-sm font-bold text-slate-600 dark:text-slate-400">Nenhum botão encontrado com essa busca.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL 1: ADD CUSTOM CARD -->
+    <div id="modal-custom-card" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full p-6 border border-slate-100 dark:border-slate-700 shadow-2xl space-y-5">
+            
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-emerald-500"></i>
+                    Criar Novo Botão
+                </h3>
+                <button onclick="closeCustomCardModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSaveCustomCard(event)" class="space-y-4">
+                <!-- Text / Label -->
+                <div>
+                    <label for="input-card-text" class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">
+                        Palavra ou Frase do Botão
+                    </label>
+                    <input type="text" id="input-card-text" required placeholder="Ex: Quero Água" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <!-- Emoji Icon -->
+                <div>
+                    <label for="input-card-emoji" class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">
+                        Emoji ou Ícone
+                    </label>
+                    <input type="text" id="input-card-emoji" required placeholder="Ex: 💧 ou 🧃" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <!-- Category Target -->
+                <div>
+                    <label for="select-card-category" class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">
+                        Categoria
+                    </label>
+                    <select id="select-card-category" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="daily">Dia a Dia</option>
+                        <option value="feelings">Sentimentos</option>
+                        <option value="hospital">Hospital / Saúde</option>
+                        <option value="custom" selected>Meus Botões (Personalizado)</option>
+                    </select>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-3 pt-2">
+                    <button type="button" onclick="closeCustomCardModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-bold text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 font-bold text-xs text-white shadow-md transition">
+                        Salvar Botão
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: VOICE & AUDIO SETTINGS -->
+    <div id="modal-voice-settings" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full p-6 border border-slate-100 dark:border-slate-700 shadow-2xl space-y-5">
+            
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-volume-high text-sky-500"></i>
+                    Ajustes de Voz
+                </h3>
+                <button onclick="closeVoiceSettingsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Voice Selection -->
+                <div>
+                    <label for="select-voice" class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">
+                        Seletor de Voz (pt-BR)
+                    </label>
+                    <select id="select-voice" onchange="updateVoiceSettings()" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        <!-- Loaded via JavaScript -->
+                    </select>
+                </div>
+
+                <!-- Speech Rate (Speed) -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="range-rate" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+                            Velocidade da Fala
+                        </label>
+                        <span id="label-rate-val" class="text-xs font-bold text-sky-600 dark:text-sky-400">1.0x</span>
+                    </div>
+                    <input type="range" id="range-rate" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateVoiceSettings()" class="w-full accent-sky-500 cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-slate-400 mt-0.5">
+                        <span>Mais Lenta</span>
+                        <span>Normal</span>
+                        <span>Rápida</span>
+                    </div>
+                </div>
+
+                <!-- Speech Pitch -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="range-pitch" class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+                            Tom da Voz
+                        </label>
+                        <span id="label-pitch-val" class="text-xs font-bold text-sky-600 dark:text-sky-400">1.0</span>
+                    </div>
+                    <input type="range" id="range-pitch" min="0.5" max="1.5" step="0.1" value="1.0" oninput="updateVoiceSettings()" class="w-full accent-sky-500 cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-slate-400 mt-0.5">
+                        <span>Grave</span>
+                        <span>Normal</span>
+                        <span>Agudo</span>
+                    </div>
+                </div>
+
+                <!-- Test Voice Button -->
+                <button onclick="testCurrentVoice()" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 font-bold text-xs text-white shadow-md flex items-center justify-center space-x-2 transition">
+                    <i class="fa-solid fa-play text-xs"></i>
+                    <span>Testar Voz Selecionada</span>
+                </button>
+            </div>
+
+            <div class="pt-2">
+                <button onclick="closeVoiceSettingsModal()" class="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-bold text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                    Concluir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 transform translate-y-24 opacity-0 transition-all duration-300 z-50 border border-slate-700">
+        <i id="toast-icon" class="fa-solid fa-circle-info text-emerald-400 text-lg"></i>
+        <span id="toast-message" class="text-xs font-bold">Notificação</span>
+    </div>
+
+    <!-- SCRIPT APPLICATION LOGIC -->
+    <script>
+        
+        // Initial Default Cards Data
+        const defaultCards = {
+            daily: [
+                { id: 'd1', text: 'Sim', emoji: '👍', bg: 'bg-emerald-100 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200' },
+                { id: 'd2', text: 'Não', emoji: '👎', bg: 'bg-rose-100 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200' },
+                { id: 'd3', text: 'Comida', emoji: '🍲', bg: 'bg-amber-100 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200' },
+                { id: 'd4', text: 'Brincar', emoji: '🧸', bg: 'bg-sky-100 dark:bg-sky-950/40 border-sky-300 dark:border-sky-800 text-sky-900 dark:text-sky-200' },
+                { id: 'd5', text: 'Sono', emoji: '😴', bg: 'bg-purple-100 dark:bg-purple-950/40 border-purple-300 dark:border-purple-800 text-purple-900 dark:text-purple-200' },
+                { id: 'd6', text: 'Acordar', emoji: '🌅', bg: 'bg-amber-100 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200' },
+                { id: 'd7', text: 'Te amo', emoji: '❤️', bg: 'bg-rose-100 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200' },
+                { id: 'd8', text: 'Quero', emoji: '✋', bg: 'bg-indigo-100 dark:bg-indigo-950/40 border-indigo-300 dark:border-indigo-800 text-indigo-900 dark:text-indigo-200' },
+                { id: 'd9', text: 'Não quero', emoji: '🚫', bg: 'bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200' },
+                { id: 'd10', text: 'Fome', emoji: '🍕', bg: 'bg-orange-100 dark:bg-orange-950/40 border-orange-300 dark:border-orange-800 text-orange-900 dark:text-orange-200' },
+                { id: 'd11', text: 'Banho', emoji: '🛁', bg: 'bg-cyan-100 dark:bg-cyan-950/40 border-cyan-300 dark:border-cyan-800 text-cyan-900 dark:text-cyan-200' },
+                { id: 'd12', text: 'Banheiro', emoji: '🚽', bg: 'bg-sky-100 dark:bg-sky-950/40 border-sky-300 dark:border-sky-800 text-sky-900 dark:text-sky-200' },
+                { id: 'd13', text: 'Sede', emoji: '🥤', bg: 'bg-blue-100 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800 text-blue-900 dark:text-blue-200' },
+                { id: 'd14', text: 'TV', emoji: '📺', bg: 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-200' },
+                { id: 'd15', text: 'Celular', emoji: '📱', bg: 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200' },
+                { id: 'd16', text: 'Mãe', emoji: '👩', bg: 'bg-pink-100 dark:bg-pink-950/40 border-pink-300 dark:border-pink-800 text-pink-900 dark:text-pink-200' },
+                { id: 'd17', text: 'Pai', emoji: '👨', bg: 'bg-blue-100 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800 text-blue-900 dark:text-blue-200' },
+                { id: 'd18', text: 'Por favor', emoji: '🙏', bg: 'bg-emerald-100 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200' },
+                { id: 'd19', text: 'Obrigado', emoji: '😊', bg: 'bg-teal-100 dark:bg-teal-950/40 border-teal-300 dark:border-teal-800 text-teal-900 dark:text-teal-200' },
+                { id: 'd20', text: 'Ajuda', emoji: '🆘', bg: 'bg-rose-200 dark:bg-rose-950/60 border-rose-400 dark:border-rose-700 text-rose-950 dark:text-rose-100 font-bold' }
+            ],
+            feelings: [
+                { id: 'f1', text: 'Feliz', emoji: '😊', bg: 'bg-amber-100 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200' },
+                { id: 'f2', text: 'Triste', emoji: '😢', bg: 'bg-blue-100 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800 text-blue-900 dark:text-blue-200' },
+                { id: 'f3', text: 'Com raiva', emoji: '😡', bg: 'bg-rose-100 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200' },
+                { id: 'f4', text: 'Assustado', emoji: '😨', bg: 'bg-purple-100 dark:bg-purple-950/40 border-purple-300 dark:border-purple-800 text-purple-900 dark:text-purple-200' },
+                { id: 'f5', text: 'Cansado', emoji: '😫', bg: 'bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200' },
+                { id: 'f6', text: 'Calmo', emoji: '😌', bg: 'bg-emerald-100 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200' },
+                { id: 'f7', text: 'Com dor', emoji: '🤕', bg: 'bg-red-100 dark:bg-red-950/40 border-red-300 dark:border-red-800 text-red-900 dark:text-red-200' },
+                { id: 'f8', text: 'Ansioso', emoji: '😰', bg: 'bg-sky-100 dark:bg-sky-950/40 border-sky-300 dark:border-sky-800 text-sky-900 dark:text-sky-200' },
+                { id: 'f9', text: 'Confuso', emoji: '😕', bg: 'bg-indigo-100 dark:bg-indigo-950/40 border-indigo-300 dark:border-indigo-800 text-indigo-900 dark:text-indigo-200' },
+                { id: 'f10', text: 'Animado', emoji: '🤩', bg: 'bg-amber-100 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200' },
+                { id: 'f11', text: 'Envergonhado', emoji: '😳', bg: 'bg-pink-100 dark:bg-pink-950/40 border-pink-300 dark:border-pink-800 text-pink-900 dark:text-pink-200' },
+                { id: 'f12', text: 'Com saudades', emoji: '🫂', bg: 'bg-purple-100 dark:bg-purple-950/40 border-purple-300 dark:border-purple-800 text-purple-900 dark:text-purple-200' }
+            ],
+            hospital: [
+                { id: 'h1', text: 'Dor', emoji: '🤕', bg: 'bg-rose-100 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200' },
+                { id: 'h2', text: 'Remédio', emoji: '💊', bg: 'bg-sky-100 dark:bg-sky-950/40 border-sky-300 dark:border-sky-800 text-sky-900 dark:text-sky-200' },
+                { id: 'h3', text: 'Febre', emoji: '🤒', bg: 'bg-amber-100 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200' },
+                { id: 'h4', text: 'Médico', emoji: '🩺', bg: 'bg-teal-100 dark:bg-teal-950/40 border-teal-300 dark:border-teal-800 text-teal-900 dark:text-teal-200' },
+                { id: 'h5', text: 'Tosse', emoji: '😷', bg: 'bg-orange-100 dark:bg-orange-950/40 border-orange-300 dark:border-orange-800 text-orange-900 dark:text-orange-200' },
+                { id: 'h6', text: 'Enjoado', emoji: '🤢', bg: 'bg-emerald-100 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200' },
+                { id: 'h7', text: 'Soro / Injeção', emoji: '💉', bg: 'bg-cyan-100 dark:bg-cyan-950/40 border-cyan-300 dark:border-cyan-800 text-cyan-900 dark:text-cyan-200' },
+                { id: 'h8', text: 'Frio', emoji: '🥶', bg: 'bg-blue-100 dark:bg-blue-950/40 border-blue-300 dark:border-blue-800 text-blue-900 dark:text-blue-200' },
+                { id: 'h9', text: 'Calor', emoji: '🥵', bg: 'bg-rose-100 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200' },
+                { id: 'h10', text: 'Enfermeira', emoji: '👩‍⚕️', bg: 'bg-purple-100 dark:bg-purple-950/40 border-purple-300 dark:border-purple-800 text-purple-900 dark:text-purple-200' },
+                { id: 'h11', text: 'Exame', emoji: '📊', bg: 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200' },
+                { id: 'h12', text: 'Dói aqui', emoji: '👈', bg: 'bg-red-100 dark:bg-red-950/40 border-red-300 dark:border-red-800 text-red-900 dark:text-red-200' },
+                { id: 'h13', text: 'Leito / Cama', emoji: '🛏️', bg: 'bg-indigo-100 dark:bg-indigo-950/40 border-indigo-300 dark:border-indigo-800 text-indigo-900 dark:text-indigo-200' },
+                { id: 'h14', text: 'Máscara', emoji: '😷', bg: 'bg-teal-100 dark:bg-teal-950/40 border-teal-300 dark:border-teal-800 text-teal-900 dark:text-teal-200' }
+            ],
+            custom: []
+        };
+
+        // Application State
+        const state = {
+            activeCategory: 'daily',
+            sentence: [],
+            customCards: [],
+            selectedVoiceIndex: 0,
+            rate: 1.0,
+            pitch: 1.0,
+            voices: []
+        };
+
+        // TTS Engine Initialization
+        const synth = window.speechSynthesis;
+
+        function loadVoices() {
+            if (!synth) return;
+            const availableVoices = synth.getVoices();
+            // Prefer pt-BR voices
+            state.voices = availableVoices.filter(v => v.lang.includes('pt') || v.lang.includes('BR'));
+            if (state.voices.length === 0) {
+                state.voices = availableVoices; // Fallback to all if no PT voice found
+            }
+
+            const voiceSelect = document.getElementById('select-voice');
+            if (voiceSelect) {
+                voiceSelect.innerHTML = '';
+                if (state.voices.length === 0) {
+                    const opt = document.createElement('option');
+                    opt.textContent = 'Voz do Sistema (Padrão)';
+                    voiceSelect.appendChild(opt);
+                } else {
+                    state.voices.forEach((voice, idx) => {
+                        const opt = document.createElement('option');
+                        opt.value = idx;
+                        opt.textContent = `${voice.name} (${voice.lang})`;
+                        if (voice.default || voice.lang === 'pt-BR') {
+                            opt.selected = true;
+                            state.selectedVoiceIndex = idx;
+                        }
+                        voiceSelect.appendChild(opt);
+                    });
+                }
+            }
+        }
+
+        if (synth) {
+            if (synth.onvoiceschanged !== undefined) {
+                synth.onvoiceschanged = loadVoices;
+            }
+        }
+
+        function speakText(text, onStartCallback = null, onEndCallback = null) {
+            if (!synth) {
+                showToast('A síntese de voz não é suportada neste navegador.', 'fa-solid fa-triangle-exclamation');
+                return;
+            }
+
+            // Cancel ongoing speech
+            synth.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'pt-BR';
+            utterance.rate = state.rate;
+            utterance.pitch = state.pitch;
+
+            if (state.voices[state.selectedVoiceIndex]) {
+                utterance.voice = state.voices[state.selectedVoiceIndex];
+            }
+
+            if (onStartCallback) utterance.onstart = onStartCallback;
+            if (onEndCallback) utterance.onend = onEndCallback;
+            utterance.onerror = () => { if (onEndCallback) onEndCallback(); };
+
+            synth.speak(utterance);
+        }
+
+        // Load custom cards from LocalStorage
+        function loadCustomCardsFromStorage() {
+            try {
+                const stored = localStorage.getItem('nise_talks_custom_cards');
+                if (stored) {
+                    state.customCards = JSON.parse(stored);
+                }
+            } catch(e) {
+                console.error("Erro ao carregar cartões salvos:", e);
+            }
+        }
+
+        // Save custom cards to LocalStorage
+        function saveCustomCardsToStorage() {
+            try {
+                localStorage.setItem('nise_talks_custom_cards', JSON.stringify(state.customCards));
+            } catch(e) {
+                console.error("Erro ao salvar cartões:", e);
+            }
+        }
+
+        // Render Cards Grid
+        function renderCards() {
+            const grid = document.getElementById('cards-grid');
+            const noMsg = document.getElementById('no-cards-msg');
+            const searchTerm = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            // Get cards for active category
+            let cardsList = [];
+            if (state.activeCategory === 'custom') {
+                cardsList = [...state.customCards];
+            } else {
+                cardsList = [...(defaultCards[state.activeCategory] || [])];
+                // Also append custom cards assigned to this category
+                const extraCustoms = state.customCards.filter(c => c.category === state.activeCategory);
+                cardsList = [...cardsList, ...extraCustoms];
+            }
+
+            // Apply search filter if typed
+            if (searchTerm) {
+                cardsList = cardsList.filter(c => c.text.toLowerCase().includes(searchTerm));
+            }
+
+            if (cardsList.length === 0) {
+                noMsg.classList.remove('hidden');
+            } else {
+                noMsg.classList.add('hidden');
+            }
+
+            cardsList.forEach(card => {
+                const cardEl = document.createElement('button');
+                const defaultBg = card.bg || 'bg-sky-100 dark:bg-sky-950/40 border-sky-300 dark:border-sky-800 text-sky-900 dark:text-sky-200';
+                
+                cardEl.id = `card-${card.id}`;
+                cardEl.className = `group relative p-4 sm:p-5 rounded-3xl border-2 ${defaultBg} flex flex-col items-center justify-center text-center shadow-card hover:shadow-card-hover active:scale-95 transition-all duration-200 cursor-pointer min-h-[120px] sm:min-h-[140px]`;
+                
+                cardEl.onclick = () => handleCardClick(card);
+
+                // Delete icon button for user created custom cards
+                let deleteBtnHtml = '';
+                if (card.isCustom) {
+                    deleteBtnHtml = `
+                        <button onclick="event.stopPropagation(); deleteCustomCard('${card.id}')" title="Excluir Botão" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 focus:opacity-100 w-7 h-7 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs transition">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    `;
+                }
+
+                cardEl.innerHTML = `
+                    ${deleteBtnHtml}
+                    <span class="text-3xl sm:text-4xl mb-2 transition-transform group-hover:scale-110">${card.emoji}</span>
+                    <span class="font-extrabold text-xs sm:text-sm tracking-tight leading-snug">${card.text}</span>
+                `;
+
+                grid.appendChild(cardEl);
+            });
+        }
+
+        // Handle card click
+        function handleCardClick(card) {
+            // Add card to sentence
+            state.sentence.push(card);
+            renderSentenceStrip();
+
+            const instantSpeak = document.getElementById('toggle-instant-speak')?.checked;
+
+            if (instantSpeak) {
+                const cardElement = document.getElementById(`card-${card.id}`);
+                
+                speakText(
+                    card.text, 
+                    () => {
+                        if (cardElement) cardElement.classList.add('shadow-speaking', 'animate-speaking');
+                    }, 
+                    () => {
+                        if (cardElement) cardElement.classList.remove('shadow-speaking', 'animate-speaking');
+                    }
+                );
+            }
+        }
+
+        // Render Sentence Strip Display
+        function renderSentenceStrip() {
+            const strip = document.getElementById('sentence-strip');
+            const emptyMsg = document.getElementById('empty-sentence-msg');
+            if (!strip) return;
+
+            // Remove existing item chips (keep empty message element)
+            const chips = strip.querySelectorAll('.sentence-chip');
+            chips.forEach(c => c.remove());
+
+            if (state.sentence.length === 0) {
+                if (emptyMsg) emptyMsg.classList.remove('hidden');
+            } else {
+                if (emptyMsg) emptyMsg.classList.add('hidden');
+
+                state.sentence.forEach((card, index) => {
+                    const chip = document.createElement('div');
+                    chip.className = 'sentence-chip flex-shrink-0 bg-white dark:bg-slate-800 border-2 border-sky-300 dark:border-sky-700 rounded-2xl px-3 py-1.5 flex items-center space-x-2 shadow-sm animate-fade-in';
+                    chip.innerHTML = `
+                        <span class="text-xl sm:text-2xl">${card.emoji}</span>
+                        <span class="font-bold text-xs sm:text-sm text-slate-800 dark:text-white">${card.text}</span>
+                        <button onclick="removeSentenceCardAt(${index})" class="text-slate-400 hover:text-rose-500 ml-1 p-0.5" title="Remover">
+                            <i class="fa-solid fa-circle-xmark text-xs"></i>
+                        </button>
+                    `;
+                    strip.appendChild(chip);
+                });
+
+                // Auto-scroll to end of strip
+                strip.scrollLeft = strip.scrollWidth;
+            }
+        }
+
+        function speakFullSentence() {
+            if (state.sentence.length === 0) {
+                showToast('Sua frase está vazia. Clique em alguns botões primeiro!', 'fa-solid fa-circle-info');
+                return;
+            }
+
+            const fullText = state.sentence.map(c => c.text).join(' ');
+            const strip = document.getElementById('sentence-strip');
+
+            speakText(
+                fullText,
+                () => { if (strip) strip.classList.add('ring-4', 'ring-emerald-400'); },
+                () => { if (strip) strip.classList.remove('ring-4', 'ring-emerald-400'); }
+            );
+        }
+
+        function removeLastCardFromSentence() {
+            if (state.sentence.length > 0) {
+                state.sentence.pop();
+                renderSentenceStrip();
+            }
+        }
+
+        function removeSentenceCardAt(index) {
+            state.sentence.splice(index, 1);
+            renderSentenceStrip();
+        }
+
+        function clearSentence() {
+            state.sentence = [];
+            renderSentenceStrip();
+        }
+
+        function switchCategory(categoryKey) {
+            state.activeCategory = categoryKey;
+
+            // Update navigation tab highlights
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('bg-sky-500', 'text-white', 'shadow-md');
+                tab.classList.add('text-slate-600', 'dark:text-slate-300');
+            });
+
+            const activeTab = document.getElementById(`tab-${categoryKey}`);
+            if (activeTab) {
+                activeTab.classList.add('bg-sky-500', 'text-white', 'shadow-md');
+                activeTab.classList.remove('text-slate-600', 'dark:text-slate-300');
+            }
+
+            renderCards();
+        }
+
+        function filterCards() {
+            renderCards();
+        }
+
+        // Custom Card Modal logic
+        function openCustomCardModal() {
+            document.getElementById('modal-custom-card')?.classList.remove('hidden');
+        }
+
+        function closeCustomCardModal() {
+            document.getElementById('modal-custom-card')?.classList.add('hidden');
+            document.getElementById('input-card-text').value = '';
+            document.getElementById('input-card-emoji').value = '';
+        }
+
+        function handleSaveCustomCard(e) {
+            e.preventDefault();
+            const text = document.getElementById('input-card-text').value.trim();
+            const emoji = document.getElementById('input-card-emoji').value.trim();
+            const category = document.getElementById('select-card-category').value;
+
+            if (!text || !emoji) return;
+
+            const newCard = {
+                id: 'custom_' + Date.now(),
+                text: text,
+                emoji: emoji,
+                category: category,
+                isCustom: true,
+                bg: 'bg-emerald-100 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+            };
+
+            state.customCards.push(newCard);
+            saveCustomCardsToStorage();
+
+            closeCustomCardModal();
+            showToast('Novo botão criado com sucesso!', 'fa-solid fa-circle-check');
+
+            // Switch to category where card was added
+            switchCategory(category);
+        }
+
+        function deleteCustomCard(cardId) {
+            state.customCards = state.customCards.filter(c => c.id !== cardId);
+            saveCustomCardsToStorage();
+            renderCards();
+            showToast('Botão excluído.', 'fa-solid fa-trash-can');
+        }
+
+        // Voice Settings Modal logic
+        function openVoiceSettingsModal() {
+            loadVoices();
+            document.getElementById('modal-voice-settings')?.classList.remove('hidden');
+        }
+
+        function closeVoiceSettingsModal() {
+            document.getElementById('modal-voice-settings')?.classList.add('hidden');
+        }
+
+        function updateVoiceSettings() {
+            const vSelect = document.getElementById('select-voice');
+            const rateRange = document.getElementById('range-rate');
+            const pitchRange = document.getElementById('range-pitch');
+
+            if (vSelect) state.selectedVoiceIndex = parseInt(vSelect.value) || 0;
+            if (rateRange) {
+                state.rate = parseFloat(rateRange.value);
+                document.getElementById('label-rate-val').textContent = state.rate.toFixed(1) + 'x';
+            }
+            if (pitchRange) {
+                state.pitch = parseFloat(pitchRange.value);
+                document.getElementById('label-pitch-val').textContent = state.pitch.toFixed(1);
+            }
+        }
+
+        function testCurrentVoice() {
+            speakText('Olá! Esta é uma demonstração da voz do Nise Talks.');
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('nise_talks_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('nise_talks_theme', 'dark');
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('nise_talks_theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Toast Helper
+        function showToast(message, iconClass = 'fa-solid fa-circle-info') {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-message');
+            const icon = document.getElementById('toast-icon');
+
+            if (toast && msg) {
+                msg.textContent = message;
+                if (icon) icon.className = iconClass + ' text-emerald-400 text-lg';
+                toast.classList.remove('translate-y-24', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('translate-y-24', 'opacity-0');
+                }, 3000);
+            }
+        }
+
+        // Initialize App on DOM Load
+        window.onload = function() {
+            initTheme();
+            loadCustomCardsFromStorage();
+            loadVoices();
+            renderCards();
+            renderSentenceStrip();
+        };
+    </script>
+</body>
+</html>
